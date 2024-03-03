@@ -8,9 +8,10 @@ string orderCart[maxOrders];
 int orderIndex = 0;
 int price[maxOrders];
 const string itemNames[10] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"};
-int itemPrices[10] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120};
+const int itemPrices[10] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120};
 int quantityAmount[maxOrders];
-int priceSum = 0;
+int priceSum;
+int money;
 
 void printOrderItems()
 {
@@ -35,10 +36,10 @@ void printOrderItems()
     cout << "-------------------------------------------------------------------------------------------" << '\n';
 }
 
-void orderSystem()
+void orderSystem(string orderMessage)
 {
    char prompt;
-   cout << "\nWelcome to Ardee's Canteen. Press 'Y' to get started. ";
+   cout << orderMessage;
    cin >> prompt;
 
    while (prompt != 'N' && prompt != 'n') {
@@ -95,19 +96,29 @@ void checkDuplicate()
 
 void checkCart()
 {
-
     checkDuplicate();
+
+    priceSum = 0;
 
     cout << "\n----------------------------CART-------------------------" << '\n';
 
-
     for (int i = 0; i < orderIndex; i++) {
-
-        cout << quantityAmount[i] << "x " << orderCart[i] << " - " << "P" << price[i] << '\n';
-        priceSum += price[i];
+        if (quantityAmount[i] > 0) {
+            cout << quantityAmount[i] << "x " << orderCart[i] << " - " << "P" << price[i] << '\n';
+            priceSum += price[i];
+        }
     }
 
     cout << "\nTotal Price is: P" << priceSum << '\n';
+}
+
+int getItemPriceIndex(string itemName) {
+    for (int i = 0; i < 10; ++i) {
+        if (itemNames[i] == itemName) {
+            return i;
+        }
+    }
+    return -1;
 }
 void updateItem()
 {
@@ -115,27 +126,98 @@ void updateItem()
     int itemNumber;
     cin >> itemNumber;
 
-    for (int i = 0; i < orderIndex; i++) {
-        cout << "+ or - ";
-        char quantityUpdate;
-        cin >> quantityUpdate;
+     if (itemNumber < 1 || itemNumber > orderIndex) {
+        cout << "Invalid item number!" << '\n';
+        return;
+    }
 
-        if (quantityUpdate == '+') {
-            cout << "Enter amount you want to add: ";
-            int amountUpdate;
-            cin >> amountUpdate;
-            price[i] += itemPrices[i] * amountUpdate;
-            quantityAmount[i] += amountUpdate;
+    cout << "You have selected " << orderCart[itemNumber - 1] << '\n';
+    cout << "+ (Add Item) or - (Subtract Item): ";
+    char quantityUpdate;
+    cin >> quantityUpdate;
+
+    int itemPriceIndex = getItemPriceIndex(orderCart[itemNumber - 1]);
+
+    if (quantityUpdate == '+') {
+        cout << "Enter amount you want to add: ";
+        int amountUpdate;
+        cin >> amountUpdate;
+        price[itemNumber - 1] += itemPrices[itemPriceIndex] * amountUpdate;
+        quantityAmount[itemNumber - 1] += amountUpdate;
+    } else if (quantityUpdate == '-') {
+        cout << "Enter amount you want to remove: ";
+        int amountMinus;
+        cin >> amountMinus;
+
+         if (amountMinus > quantityAmount[itemNumber - 1]) {
+            cout << "Cannot remove more items than what you have ordered!" << '\n';
+            return;
         }
+
+        price[itemNumber - 1] -= itemPrices[itemPriceIndex] * amountMinus;
+        quantityAmount[itemNumber - 1] -= amountMinus;
+
+            if  (amountMinus == quantityAmount[itemNumber - 1]) {
+                orderCart[itemNumber - 1] = "";
+                quantityAmount[itemNumber - 1] = 0;
+                price[itemNumber - 1] = 0;
+                orderIndex--;
+        }
+    } else {
+        cout << "Invalid option!" << '\n';
+        return;
+    }
+
+}
+void deleteItem() {
+    cout << "Enter Item Number: ";
+    int itemNumber;
+    cin >> itemNumber;
+
+     if (itemNumber < 1 || itemNumber > orderIndex) {
+        cout << "Invalid item number!" << '\n';
+        return;
+    }
+
+    cout << "You have selected " << orderCart[itemNumber - 1] << '\n';
+    cout << "Are you sure you want to delete this item? ";
+    char deleteCart;
+    cin >> deleteCart;
+
+    if (deleteCart != 'N' && deleteCart != 'n') {
+        for (int i = itemNumber - 1; i < orderIndex - 1; ++i) {
+            orderCart[i] = orderCart[i + 1];
+            quantityAmount[i] = quantityAmount[i + 1];
+            price[i] = price[i + 1];
+        }
+        orderCart[orderIndex - 1] = "";
+        quantityAmount[orderIndex - 1] = 0;
+        price[orderIndex - 1] = 0;
+        orderIndex--;
+
+        cout << "Order deleted successfully!" << '\n';
+    } else {
+        cout << "Deletion canceled" << '\n';
     }
 }
+bool askCheckout() {
+    cout << "\nWould you like to check out? ";
+    char secondPrompt;
+    cin >> secondPrompt;
+
+    return (secondPrompt != 'N' && secondPrompt != 'n');
+
+}
+
 void checkout()
 {
     cout << "\nPayment: ";
-    int money;
     cin >> money;
 
     if (money < priceSum) {
         cout << "You do not have enough cash!";
     }
+}
+void printReceipt() {
+    cout << "\nTHIS IS WHERE THE RECEIPT WILL GO. TO BE HANDLED BY ARDEE, JUSTINE, HANS, JANNEL, RUSSEL" << '\n';
 }
