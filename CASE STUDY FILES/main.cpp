@@ -15,7 +15,6 @@ int main()
     char checkoutPrompt;
     cin >> checkoutPrompt;
 
-
     if (checkoutPrompt != 'N' && checkoutPrompt != 'n')
         checkout();
     else {
@@ -30,27 +29,29 @@ int main()
             int option;
             cin >> option;
 
-            if (option == 1)
-                deleteItem();
-            else if (option == 2)
-                updateItem();
-            else if (option == 3)
-                orderSystem(orderingAgain);
-            else {
-                cout << "Invalid option! Select again";
-                continue;
+            switch (option) {
+                case 1:
+                    deleteItem();
+                    break;
+                case 2:
+                    updateItem();
+                    break;
+                case 3:
+                    orderSystem(orderingAgain);
+                    break;
+                default:
+                    cout << "Invalid option! Select again";
+                    continue;
             }
 
             cout << "Do you want to modify your existing orders? (Y/N) ";
             cin >> orderPrompt;
 
-
-
             if (orderPrompt != 'Y' && orderPrompt != 'y') {
                 checkCart();
-                 if (askCheckout()) {
+                if (askCheckout()) {
                     checkout();
-                 }
+                }
             } else {
                 checkCart();
             }

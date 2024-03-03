@@ -1,8 +1,6 @@
 #ifndef ORDER_SYSTEM_H_INCLUDED
 #define ORDER_SYSTEM_H_INCLUDED
 
-#include <string>
-
 using namespace std;
 
 void printOrderItems();

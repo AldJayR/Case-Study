@@ -38,11 +38,11 @@ void printOrderItems()
 
 void orderSystem(string orderMessage)
 {
-   char prompt;
-   cout << orderMessage;
-   cin >> prompt;
+    char prompt;
+    cout << orderMessage;
+    cin >> prompt;
 
-   while (prompt != 'N' && prompt != 'n') {
+    while (prompt != 'N' && prompt != 'n') {
         cout << "\nWhat would you like to order? ";
         int item{};
         cin >> item;
@@ -73,7 +73,7 @@ void orderSystem(string orderMessage)
         cin >> prompt;
 
 
-   }
+    }
 }
 
 void checkDuplicate()
@@ -126,7 +126,7 @@ void updateItem()
     int itemNumber;
     cin >> itemNumber;
 
-     if (itemNumber < 1 || itemNumber > orderIndex) {
+    if (itemNumber < 1 || itemNumber > orderIndex) {
         cout << "Invalid item number!" << '\n';
         return;
     }
@@ -138,35 +138,43 @@ void updateItem()
 
     int itemPriceIndex = getItemPriceIndex(orderCart[itemNumber - 1]);
 
-    if (quantityUpdate == '+') {
-        cout << "Enter amount you want to add: ";
-        int amountUpdate;
-        cin >> amountUpdate;
-        price[itemNumber - 1] += itemPrices[itemPriceIndex] * amountUpdate;
-        quantityAmount[itemNumber - 1] += amountUpdate;
-    } else if (quantityUpdate == '-') {
-        cout << "Enter amount you want to remove: ";
-        int amountMinus;
-        cin >> amountMinus;
-
-         if (amountMinus > quantityAmount[itemNumber - 1]) {
-            cout << "Cannot remove more items than what you have ordered!" << '\n';
-            return;
+   switch (quantityUpdate) {
+    case '+':
+        {
+            cout << "Enter amount you want to add: ";
+            int amountUpdate;
+            cin >> amountUpdate;
+            price[itemNumber - 1] += itemPrices[itemPriceIndex] * amountUpdate;
+            quantityAmount[itemNumber - 1] += amountUpdate;
+            break;
         }
+    case '-':
+        {
+            cout << "Enter amount you want to remove: ";
+            int amountMinus;
+            cin >> amountMinus;
 
-        price[itemNumber - 1] -= itemPrices[itemPriceIndex] * amountMinus;
-        quantityAmount[itemNumber - 1] -= amountMinus;
+            if (amountMinus > quantityAmount[itemNumber - 1]) {
+                cout << "Cannot remove more items than what you have ordered!" << '\n';
+                return;
+            }
 
-            if  (amountMinus == quantityAmount[itemNumber - 1]) {
+            price[itemNumber - 1] -= itemPrices[itemPriceIndex] * amountMinus;
+            quantityAmount[itemNumber - 1] -= amountMinus;
+
+            if (amountMinus == quantityAmount[itemNumber - 1]) {
                 orderCart[itemNumber - 1] = "";
                 quantityAmount[itemNumber - 1] = 0;
                 price[itemNumber - 1] = 0;
                 orderIndex--;
+            }
+            break;
         }
-    } else {
+    default:
         cout << "Invalid option!" << '\n';
         return;
-    }
+}
+
 
 }
 void deleteItem() {
@@ -174,7 +182,7 @@ void deleteItem() {
     int itemNumber;
     cin >> itemNumber;
 
-     if (itemNumber < 1 || itemNumber > orderIndex) {
+    if (itemNumber < 1 || itemNumber > orderIndex) {
         cout << "Invalid item number!" << '\n';
         return;
     }
