@@ -5,13 +5,13 @@ using namespace std;
 
 // Initialize global variables
 
-constexpr int g_maxOrders = 10;
-string orderCart[g_maxOrders];
+constexpr int g_MAX_ORDERS = 10;
+string orderCart[g_MAX_ORDERS];
 int g_orderIndex = 0;
-int price[g_maxOrders];
-const string itemNames[g_maxOrders] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"};
-constexpr int itemPrices[g_maxOrders] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120};
-int quantityAmount[g_maxOrders];
+int price[g_MAX_ORDERS];
+const string itemNames[g_MAX_ORDERS] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"};
+constexpr int itemPrices[g_MAX_ORDERS] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120};
+int quantityAmount[g_MAX_ORDERS];
 
 
 // Print out hardcoded GUI for Menu (will be dynamic soon)
@@ -105,7 +105,7 @@ void orderSystem(string orderMessage)
         price[g_orderIndex] = totalPrice;
         g_orderIndex++;
 
-        cout << "Would you like to order more? ";
+        cout << "Would you like to order more? (Y/N) ";
         cin >> prompt;
 
 
@@ -165,7 +165,7 @@ void checkCart(int *priceSum)
 
 int getItemPriceIndex(string itemName)
 {
-    for (int i = 0; i < g_maxOrders; ++i)
+    for (int i = 0; i < g_MAX_ORDERS; ++i)
     {
         if (itemNames[i] == itemName)
             return i;
@@ -271,7 +271,7 @@ void deleteItem()
     }
 
     cout << "You have selected " << orderCart[itemNumber - 1] << '\n';
-    cout << "Are you sure you want to delete this item? ";
+    cout << "Are you sure you want to delete this item? (Y/N) ";
     char deleteCart;
     cin >> deleteCart;
 
@@ -305,11 +305,21 @@ bool askCheckout()
 
 // checkout, uses pointers and references to reduce use of global variables
 
-int dropOrders()
+void dropOrders()
 {
     cout << "\nOrders dropped!" << '\n';
 
-    return 0;
+    g_orderIndex = 0;
+
+    for (int i = 0; i < g_MAX_ORDERS; i++)
+    {
+        price[i] = 0;
+        orderCart[i] = "";
+        quantityAmount[i] = 0;
+    }
+
+    cout << "Thank you for coming to Ardee's Canteen!" << '\n';
+
 }
 
 void checkout(int *money, int *priceSum)
