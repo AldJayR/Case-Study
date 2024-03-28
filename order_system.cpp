@@ -5,13 +5,13 @@ using namespace std;
 
 // Initialize global variables
 
-constexpr int maxOrders = 10;
-string orderCart[maxOrders];
+constexpr int g_maxOrders = 10;
+string orderCart[g_maxOrders];
 int g_orderIndex = 0;
-int price[maxOrders];
-const string itemNames[maxOrders] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"};
-constexpr int itemPrices[maxOrders] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120};
-int quantityAmount[maxOrders];
+int price[g_maxOrders];
+const string itemNames[g_maxOrders] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"};
+constexpr int itemPrices[g_maxOrders] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120};
+int quantityAmount[g_maxOrders];
 
 
 // Print out hardcoded GUI for Menu (will be dynamic soon)
@@ -51,7 +51,7 @@ void orderSystem(string orderMessage)
 
     while (prompt != 'N' && prompt != 'n')
     {
-        cout << "\nWhat would you like to order? ";
+        cout << "\nWhat would you like to order? (1-10) ";
         int item {};
         cin >> item;
         int itemAmount {};
@@ -165,7 +165,7 @@ void checkCart(int *priceSum)
 
 int getItemPriceIndex(string itemName)
 {
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < g_maxOrders; ++i)
     {
         if (itemNames[i] == itemName)
             return i;
@@ -199,7 +199,6 @@ void updateItem()
 
    switch (quantityUpdate)
    {
-
     case '+':
         {
             cout << "Enter amount you want to add: ";
@@ -306,13 +305,34 @@ bool askCheckout()
 
 // checkout, uses pointers and references to reduce use of global variables
 
+int dropOrders()
+{
+    cout << "\nOrders dropped!" << '\n';
+
+    return 0;
+}
+
 void checkout(int *money, int *priceSum)
 {
     cout << "\nPayment: ";
     cin >> *money;
 
     if (*money < *priceSum)
-        cout << "You do not have enough cash!" << '\n';
+    {
+        cout << "You do not have enough cash!"
+             << "\nCancel order or provide enough cash? (Y/N) ";
+                char continueOrder;
+                cin >> continueOrder;
+                if (continueOrder != 'N' && continueOrder != 'n')
+                {
+                    checkout(money, priceSum);
+                }
+                else
+                {
+                    dropOrders();
+                }
+
+    }
 }
 void printReceipt()
 {
