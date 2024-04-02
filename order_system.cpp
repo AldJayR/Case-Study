@@ -3,21 +3,21 @@
 
 using namespace std;
 
-// Initialize global variables
+// Global variables initialization
 
-constexpr int g_MAX_ORDERS = 10;
-string orderCart[g_MAX_ORDERS];
-int g_orderIndex = 0;
-int price[g_MAX_ORDERS];
-const string itemNames[g_MAX_ORDERS] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"};
-constexpr int itemPrices[g_MAX_ORDERS] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120};
-int quantityAmount[g_MAX_ORDERS];
-
+constexpr int g_MAX_ORDERS = 10;    // Maximum number of orders allowed
+string orderCart[g_MAX_ORDERS];     // Array to store ordered items
+int g_orderIndex = 0;               // Index for the current order
+int price[g_MAX_ORDERS];            // Array to store prices of ordered items
+const string itemNames[g_MAX_ORDERS] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"}; // Array of item names
+constexpr int itemPrices[g_MAX_ORDERS] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120}; // Array of item prices
+int quantityAmount[g_MAX_ORDERS];   // Array to store quantity of each ordered item
 
 // Print out hardcoded GUI for Menu (will be dynamic soon)
 
 void printOrderItems()
 {
+    // Displaying the menu GUI
     cout << "+------------------------------------------------------------------------------------------+" << '\n';
     cout << "|                                                                                          |" << '\n';
     cout << "|                                   ORDERING SYSTEM                                        |" << '\n';
@@ -107,8 +107,6 @@ void orderSystem(string orderMessage)
 
         cout << "Would you like to order more? (Y/N) ";
         cin >> prompt;
-
-
     }
 }
 
@@ -116,7 +114,7 @@ void orderSystem(string orderMessage)
 
 void checkDuplicate()
 {
-
+    // Loop through the order cart to check for duplicates
     for (int i = 0; i < g_orderIndex; i++)
     {
         if (i < g_orderIndex - 1 && orderCart[i + 1] == orderCart[i])
@@ -135,19 +133,21 @@ void checkDuplicate()
     }
 }
 
+// Function to check the items in the cart and print the total price
+
 void checkCart(int *priceSum)
 {
-    // call the check duplicate function to merge duplicate items
-
+    // Call the check duplicate function to merge duplicate items
     checkDuplicate();
 
-    // initialize total to 0
-
+    // Initialize total to 0
     *priceSum = 0;
 
-    // use ASCII art to create GUI for CART
-
-    cout << "\n----------------------------CART-------------------------" << '\n';
+    // Display GUI for CART
+    cout << '\n';
+    cout << "+-------------------------------------------------------+" << '\n';
+    cout << "|                        CART                           |" << '\n';
+    cout << "+-------------------------------------------------------+" << '\n';
 
     for (int i = 0; i < g_orderIndex; i++)
     {
@@ -158,7 +158,9 @@ void checkCart(int *priceSum)
         }
     }
 
+    cout << "\n\n---------------------------------------------------------" << '\n';
     cout << "\nTotal Price is: P" << *priceSum << '\n';
+    cout << "\n---------------------------------------------------------" << '\n';
 }
 
 // Linear search algorithm to find the correct index for the price in the cart
@@ -195,7 +197,6 @@ void updateItem()
     cin >> quantityUpdate;
 
     int itemPriceIndex = getItemPriceIndex(orderCart[itemNumber - 1]);
-
 
    switch (quantityUpdate)
    {
@@ -244,7 +245,6 @@ void updateItem()
                 quantityAmount[g_orderIndex - 1] = 0;
                 price[g_orderIndex - 1] = 0;
                 g_orderIndex--;
-
             }
             break;
         }
@@ -256,7 +256,7 @@ void updateItem()
 
 }
 
-// delete item function
+// Delete item function
 
 void deleteItem()
 {
@@ -293,6 +293,9 @@ void deleteItem()
     else
         cout << "Deletion canceled" << '\n';
 }
+
+// Function to ask for checkout
+
 bool askCheckout()
 {
     cout << "\nWould you like to check out? ";
@@ -300,12 +303,11 @@ bool askCheckout()
     cin >> secondPrompt;
 
     return (secondPrompt != 'N' && secondPrompt != 'n');
-
 }
 
-// checkout, uses pointers and references to reduce use of global variables
+// Checkout function, uses pointers and references to reduce use of global variables
 
-void dropOrders()
+int dropOrders()
 {
     cout << "\nOrders dropped!" << '\n';
 
@@ -320,6 +322,7 @@ void dropOrders()
 
     cout << "Thank you for coming to Ardee's Canteen!" << '\n';
 
+    return 1;
 }
 
 void checkout(int *money, int *priceSum)
@@ -344,6 +347,9 @@ void checkout(int *money, int *priceSum)
 
     }
 }
+
+// Print receipt function
+
 void printReceipt()
 {
     cout << "\nTHIS IS WHERE THE RECEIPT WILL GO. TO BE HANDLED BY ARDEE, JUSTINE, HANS, JANNEL, RUSSEL" << '\n';

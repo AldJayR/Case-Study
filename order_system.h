@@ -11,7 +11,7 @@ int getItemPriceIndex(string itemName);
 void updateItem();
 void deleteItem();
 bool askCheckout();
-void dropOrders();
+int dropOrders();
 void checkout(int *money, int *priceSum);
 void printReceipt();
 
