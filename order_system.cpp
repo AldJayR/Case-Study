@@ -1,19 +1,21 @@
 #include <iostream>
+#include <string>
 #include "order_system.h"
 
 using namespace std;
 
 // Global variables initialization
 
+
 constexpr int g_MAX_ORDERS = 10;    // Maximum number of orders allowed
 string orderCart[g_MAX_ORDERS];     // Array to store ordered items
 int g_orderIndex = 0;               // Index for the current order
 int price[g_MAX_ORDERS];            // Array to store prices of ordered items
-const string itemNames[g_MAX_ORDERS] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"}; // Array of item names
-constexpr int itemPrices[g_MAX_ORDERS] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120}; // Array of item prices
+const string itemNames[] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"}; // Array of item names
+constexpr int itemPrices[] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120}; // Array of item prices
 int quantityAmount[g_MAX_ORDERS];   // Array to store quantity of each ordered item
 
-// Print out hardcoded GUI for Menu (will be dynamic soon)
+// Print out hardcoded GUI for Menu
 
 void printOrderItems()
 {
@@ -49,66 +51,66 @@ void orderSystem(string orderMessage)
 
     // Asks the user for their order
 
-    while (prompt != 'N' && prompt != 'n')
-    {
-        cout << "\nWhat would you like to order? (1-10) ";
-        int item {};
-        cin >> item;
-        int itemAmount {};
-
-        // Error handling
-
-        if (item < 1 || item > 10)
+        while (prompt != 'N' && prompt != 'n')
         {
-            cout << "Invalid item number! Please select a valid item." << '\n';
-            continue;
-        }
+            cout << "\nWhat would you like to order? (1-10) ";
+            int item {};
+            cin >> item;
+            int itemAmount {};
 
-        // Successful order
+            // Error handling
 
-        cout << "You have ordered " << itemNames[item - 1] << '\n';
-
-        // If customer ordered more than 10 items
-
-        do
-        {
-            cout << "How much would you like? ";
-            cin >> itemAmount;
-
-            if (itemAmount > 10)
+            if (item < 1 || item > 10)
             {
-                cout << "You cannot order more than ten items!" << '\n';
+                cout << "Invalid item number! Please select a valid item." << '\n';
+                continue;
             }
+
+            // Successful order
+
+            cout << "You have ordered " << itemNames[item - 1] << '\n';
+
+            // If customer ordered more than 10 items
+
+            do
+            {
+                cout << "How much would you like? ";
+                cin >> itemAmount;
+
+                if (itemAmount > 10)
+                {
+                    cout << "You cannot order more than ten items!" << '\n';
+                }
+            }
+            while (itemAmount > 10);
+
+
+            // error handling
+
+            if (itemAmount <= 0)
+            {
+                cout << "Invalid amount! Please enter a positive integer." << '\n';
+                continue;
+            }
+
+            cout << "You have ordered " << itemAmount << " " << itemNames[item - 1] << "(s)." << '\n';
+
+            // Calculate price
+
+            int totalPrice = itemPrices[item - 1] * itemAmount;
+
+
+            // Create cart and updates as an order is made.
+
+            quantityAmount[g_orderIndex] = itemAmount;
+            orderCart[g_orderIndex] = itemNames[item - 1];
+            price[g_orderIndex] = totalPrice;
+            g_orderIndex++;
+
+            cout << "Would you like to order more? (Y/N) ";
+            cin >> prompt;
         }
-        while (itemAmount > 10);
-
-
-        // error handling
-
-        if (itemAmount <= 0)
-        {
-            cout << "Invalid amount! Please enter a positive integer." << '\n';
-            continue;
-        }
-
-        cout << "You have ordered " << itemAmount << " " << itemNames[item - 1] << "(s)." << '\n';
-
-        // Calculate price
-
-        int totalPrice = itemPrices[item - 1] * itemAmount;
-
-
-        // Create cart and updates as an order is made.
-
-        quantityAmount[g_orderIndex] = itemAmount;
-        orderCart[g_orderIndex] = itemNames[item - 1];
-        price[g_orderIndex] = totalPrice;
-        g_orderIndex++;
-
-        cout << "Would you like to order more? (Y/N) ";
-        cin >> prompt;
     }
-}
 
 // Checks for duplicate items and joins them
 
@@ -186,7 +188,7 @@ void updateItem()
     if (itemNumber < 1 || itemNumber > g_orderIndex)
     {
         cout << "Invalid item number!" << '\n';
-        return;
+        updateItem();
     }
 
     // Selecting an item
@@ -299,10 +301,10 @@ void deleteItem()
 bool askCheckout()
 {
     cout << "\nWould you like to check out? ";
-    char secondPrompt;
-    cin >> secondPrompt;
+    char decision;
+    cin >> decision;
 
-    return (secondPrompt != 'N' && secondPrompt != 'n');
+    return (toupper(decision) != 'N');
 }
 
 // Checkout function, uses pointers and references to reduce use of global variables
