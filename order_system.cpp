@@ -240,6 +240,21 @@ void updateItem()
             int amountUpdate;
             cin >> amountUpdate;
 
+            int totalQuantity = 0;
+            for (int i = 0; i < g_orderIndex; ++i)
+            {
+                if (orderCart[i] == itemNames[itemPriceIndex])
+                {
+                    totalQuantity += quantityAmount[i];
+                }
+            }
+
+            if (totalQuantity >= 10)
+            {
+                cout << "You cannot order more than ten items of this type!" << '\n';
+                return;
+            }
+
             price[itemNumber - 1] += itemPrices[itemPriceIndex] * amountUpdate; // Item price in the array of the selected item is added to the current price
             quantityAmount[itemNumber - 1] += amountUpdate; // Quantity amount is updated
 
@@ -272,7 +287,7 @@ void updateItem()
 
             // removes the item entirely if the amount is the same as the quantity amount in the cart
 
-            if (amountMinus == quantityAmount[itemNumber - 1])
+            if (quantityAmount[itemNumber - 1] == 0)
             {
                 for (int i = itemNumber - 1; i < g_orderIndex - 1; ++i)
                 {
@@ -326,9 +341,13 @@ void deleteItem()
         g_orderIndex--;
 
         cout << "Order deleted successfully!" << '\n';
+
+
     }
     else
+    {
         cout << "Deletion canceled" << '\n';
+    }
 }
 
 // Function to ask for checkout
@@ -428,10 +447,10 @@ string getCurrentDateTime()
 void printReceipt()
 {
     string orderTime = getCurrentDateTime();
-    bool isCheckout = true;
 
     if (isCheckout)
     {
+        cout << "Receipt to be handled by other members" << '\n';
         // RECEIPT TO BE HANDLED BY OTHER MEMBERS
     }
 }
