@@ -14,7 +14,7 @@ int g_orderIndex = 0;               // Index for the current order
 int price[g_MAX_ORDERS];            // Array to store prices of ordered items
 const string itemNames[] = {"Fries", "Coke", "Chicken with Rice", "Ice Cream", "Menudo", "Burger", "Pizza", "Salad", "Spaghetti", "Sushi"}; // Array of item names
 constexpr int itemPrices[] = {40, 25, 70, 25, 50, 60, 100, 45, 80, 120}; // Array of item prices
-int quantityAmount[g_MAX_ORDERS];   // Array to store quantity of each ordered item
+int quantityAmount[g_MAX_ORDERS] = {};  // Array to store quantity of each ordered item
 bool isCheckout = false;
 
 using namespace std;
@@ -64,15 +64,34 @@ void orderSystem(string orderMessage)
 
         // Error handling
 
-        if (item < 1 || item > 10)
+        while (cin.fail() || item < 1 || item > 10)
         {
-            cout << "Invalid item number! Please select a valid item." << '\n';
+            cout << "Invalid input! Please enter a number between 1 and 10.\n";
+            cin.clear();
+            cin.ignore(100, '\n');
+            cout << "\n\nWhat would you like to order? (1-10) ";
+            cin >> item;
+        }
+
+        int totalQuantity = 0;
+        for (int i = 0; i < g_orderIndex; ++i)
+        {
+            if (orderCart[i] == itemNames[item - 1])
+            {
+                totalQuantity += quantityAmount[i];
+            }
+        }
+
+        if (totalQuantity >= 10)
+        {
+            cout << "You cannot order more than ten items of this type!" << '\n';
             continue;
         }
 
         // Successful order
 
         cout << "You have ordered " << itemNames[item - 1] << '\n';
+
 
         // If customer ordered more than 10 items
 
@@ -81,21 +100,15 @@ void orderSystem(string orderMessage)
             cout << "How much would you like? (cannot exceed more than 10 items) ";
             cin >> itemAmount;
 
-            if (itemAmount > 10)
+             if (cin.fail() || itemAmount <= 0 || itemAmount > 10)
             {
-                cout << "You cannot order more than ten items!" << '\n';
+                cout << "\nInvalid amount! Please enter a positive integer less than or equal to 10.\n";
+                cin.clear();
+                cin.ignore(100, '\n'); // Clear the input buffer
             }
         }
-        while (itemAmount > 10);
+        while (cin.fail() || itemAmount <= 0 || itemAmount > 10);
 
-
-        // error handling
-
-        if (itemAmount <= 0)
-        {
-            cout << "Invalid amount! Please enter a positive integer." << '\n';
-            continue;
-        }
 
         cout << "You have ordered " << itemAmount << " " << itemNames[item - 1] << "(s)." << '\n';
 
@@ -204,10 +217,10 @@ void updateItem()
     int itemNumber;
     cin >> itemNumber;
 
-    if (itemNumber < 1 || itemNumber > g_orderIndex)
+    if (cin.fail() || itemNumber < 1 || itemNumber > g_orderIndex)
     {
-        cout << "Invalid item number!" << '\n';
-        updateItem();
+        cout << "Invalid item number!\n";
+        return;
     }
 
     // Selecting an item
@@ -230,11 +243,14 @@ void updateItem()
             price[itemNumber - 1] += itemPrices[itemPriceIndex] * amountUpdate; // Item price in the array of the selected item is added to the current price
             quantityAmount[itemNumber - 1] += amountUpdate; // Quantity amount is updated
 
-            if (quantityAmount[itemNumber - 1] > 10)
+            if (cin.fail() || amountUpdate <= 0)
             {
-                cout << "You cannot have more than ten items!" << '\n';
+                cout << "Invalid input! Please enter a positive integer.\n";
+                cin.clear();
+                cin.ignore(100, '\n');
                 return;
             }
+
             break;
         }
     case '-':
@@ -243,9 +259,11 @@ void updateItem()
             int amountMinus;
             cin >> amountMinus;
 
-            if (amountMinus > quantityAmount[itemNumber - 1])  // if amount is more than the current items in the cart
+           if (cin.fail() || amountMinus <= 0)
             {
-                cout << "Cannot remove more items than what you have ordered!" << '\n';
+                cout << "Invalid input! Please enter a positive integer.\n";
+                cin.clear();
+                cin.ignore(100, '\n'); // Clear the input buffer
                 return;
             }
 
@@ -283,7 +301,7 @@ void deleteItem()
     int itemNumber;
     cin >> itemNumber;
 
-    if (itemNumber < 1 || itemNumber > g_orderIndex)
+    if (cin.fail() || itemNumber < 1 || itemNumber > g_orderIndex)
     {
         cout << "Invalid item number!" << '\n';
         return;
@@ -350,6 +368,15 @@ void checkout(int *money, int *priceSum)
     {
         cout << "\nPayment: ";
         cin >> *money;
+
+        while (cin.fail() || *money < 0)
+        {
+            cout << "Invalid input! Please enter a positive number.\n";
+            cin.clear();
+            cin.ignore(100, '\n'); // Clear the input buffer
+            cout << "\nPayment: ";
+            cin >> *money;
+        }
 
         if (*money < *priceSum)
         {
