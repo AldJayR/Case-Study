@@ -6,9 +6,9 @@ You will be making a receipt function. Note that this is a VOID function, so it 
 
 2. Order Details: Iterate through the orderCart, quantityAmount, and price arrays to print each item along with its quantity and price. Use setw() for proper alignment and consistency in formatting. Include a section label ("DINE IN-" or "TAKE OUT") based on the value of the dine variable.
 
-3. Total Calculation: Calculate the total amount by summing up the prices of all ordered items. Optionally, consider adding VAT calculation if applicable, as shown in the code.
+3. Total Calculation: Calculate the total amount by summing up the prices of all ordered items. Also consider adding VAT calculation if applicable.
 
-4.  Final Summary: Display the total quantity of items ordered along with the subtotal, taxes (if applicable), and final total. Ensure all amounts are formatted correctly and aligned neatly.
+4.  Final Summary: Display the total quantity of items ordered along with the subtotal, taxes, and final total. Ensure all amounts are formatted correctly and aligned neatly.
 
 5. Footer Section: Include a thank-you message ("Thank you, please come again") and any additional information required for an official receipt, such as customer details ("Sold to:", "Name:", "Address:", "TIN:").
 
